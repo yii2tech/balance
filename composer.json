@@ -1,0 +1,30 @@
+{
+    "name": "yii2tech/balance",
+    "description": "Provides support for Balance accounting system based on debit and credit principle",
+    "keywords": ["yii2", "balance", "accounting", "bookkeeping", "debit", "credit"],
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yii2tech/balance/issues",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "https://github.com/yii2tech/balance/wiki",
+        "source": "https://github.com/yii2tech/balance"
+    },
+    "authors": [
+        {
+            "name": "Paul Klimov",
+            "email": "klimov.paul@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": { "yii2tech\\balance\\": "" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
