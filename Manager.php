@@ -43,6 +43,24 @@ abstract class Manager extends Component implements ManagerInterface
     public $dateAttributeValue;
 
 
+    public function increase($account, $amount, $data = [])
+    {
+        $accountId = $this->fetchAccountId($account);
+
+        if (!isset($data[$this->dateAttribute])) {
+            $data[$this->dateAttribute] = $this->getDateAttributeValue();
+        }
+        $data[$this->amountAttribute] = $amount;
+        $data[$this->accountAttribute] = $accountId;
+
+        return $this->writeTransaction($data);
+    }
+
+    public function decrease($account, $amount, $data = [])
+    {
+        return $this->increase($account, -$amount, $data);
+    }
+
     public function transfer($from, $to, $amount, $data = [])
     {
         $fromId = $this->fetchAccountId($from);
@@ -50,16 +68,10 @@ abstract class Manager extends Component implements ManagerInterface
 
         $data[$this->dateAttribute] = $this->getDateAttributeValue();
 
-        $fromData = $data;
-        $fromData[$this->amountAttribute] = -$amount;
-        $fromData[$this->accountAttribute] = $fromId;
-
-        $toData = $data;
-        $toData[$this->amountAttribute] = $amount;
-        $toData[$this->accountAttribute] = $toId;
-
-        $this->writeTransaction($fromData);
-        $this->writeTransaction($toData);
+        return [
+            $this->decrease($fromId, $amount, $data),
+            $this->increase($toId, $amount, $data)
+        ];
     }
 
     public function revert($transactionId)
