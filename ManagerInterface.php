@@ -7,15 +7,13 @@
 
 namespace yii2tech\balance;
 
-use yii\base\Component;
-
 /**
- * BaseManager
+ * ManagerInterface
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
  */
-abstract class BaseManager extends Component
+interface ManagerInterface
 {
 
 }
