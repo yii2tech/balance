@@ -39,8 +39,9 @@ class ManagerTest extends TestCase
         $manager = new ManagerMock();
 
         $manager->transfer(1, 2, 10);
-        $transaction = $manager->getLastTransaction();
-        $this->assertEquals(10, $transaction['amount']);
+        $transactions = $manager->getLastTransactionPair();
+        $this->assertEquals(-10, $transactions[0]['amount']);
+        $this->assertEquals(10, $transactions[1]['amount']);
 
         $manager->transfer(1, 2, 10, ['extra' => 'custom']);
         $transaction = $manager->getLastTransaction();
@@ -106,5 +107,44 @@ class ManagerTest extends TestCase
         $amount = 40;
         $manager->increase($accountId, $amount);
         $this->assertArrayNotHasKey($accountId, $manager->accountBalances);
+    }
+
+    /**
+     * @depends testTransfer
+     */
+    public function testSaveExtraAccount()
+    {
+        $manager = new ManagerMock();
+
+        $manager->extraAccountLinkAttribute = 'extraAccountId';
+        $manager->transfer(1, 2, 10);
+        $transactions = $manager->getLastTransactionPair();
+        $this->assertEquals(2, $transactions[0][$manager->extraAccountLinkAttribute]);
+        $this->assertEquals(1, $transactions[1][$manager->extraAccountLinkAttribute]);
+    }
+
+    /**
+     * @depends testIncreaseAccountBalance
+     * @depends testTransfer
+     */
+    public function testRevert()
+    {
+        $manager = new ManagerMock();
+        $manager->accountBalanceAttribute = 'balance';
+        $manager->extraAccountLinkAttribute = 'extraAccountId';
+
+        $accountId = 1;
+        $transactionId = $manager->increase($accountId, 10);
+        $manager->revert($transactionId);
+
+        $this->assertEquals(0, $manager->accountBalances[$accountId]);
+
+        $fromId = 10;
+        $toId = 20;
+        $transactionIds = $manager->transfer($fromId, $toId, 10);
+        $manager->revert($transactionIds[0]);
+
+        $this->assertEquals(0, $manager->accountBalances[$fromId]);
+        $this->assertEquals(0, $manager->accountBalances[$toId]);
     }
 }

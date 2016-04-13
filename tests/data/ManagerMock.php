@@ -30,12 +30,31 @@ class ManagerMock extends \yii2tech\balance\Manager
     }
 
     /**
+     * @return array[] last 2 transactions data.
+     */
+    public function getLastTransactionPair()
+    {
+        $last = end($this->transactions);
+        $preLast = prev($this->transactions);
+        return [$preLast, $last];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function calculateBalance($account)
+    {
+        $accountId = $this->findAccountId($account);
+        return $this->accountBalances[$accountId];
+    }
+
+    /**
      * @inheritdoc
      */
     protected function writeTransaction($attributes)
     {
         $this->transactions[] = $attributes;
-        return count($this->transactions);
+        return count($this->transactions) - 1;
     }
 
     /**
@@ -69,5 +88,16 @@ class ManagerMock extends \yii2tech\balance\Manager
             $this->accountBalances[$accountId] = 0;
         }
         $this->accountBalances[$accountId] += $amount;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function findTransaction($id)
+    {
+        if (isset($this->transactions[$id])) {
+            return $this->transactions[$id];
+        }
+        return null;
     }
 }

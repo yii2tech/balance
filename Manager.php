@@ -14,6 +14,8 @@ use yii\helpers\VarDumper;
 /**
  * Manager is a base class for the balance managers.
  *
+ * @see ManagerInterface
+ *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
  */
@@ -28,13 +30,23 @@ abstract class Manager extends Component implements ManagerInterface
      */
     public $amountAttribute = 'amount';
     /**
-     * @var string name of the transaction entity attribute, which should store associated account ID.
+     * @var string name of the transaction entity attribute, which should be used to link transaction entity with
+     * account entity (store associated account ID).
      */
-    public $accountAttribute = 'accountId';
+    public $accountLinkAttribute = 'accountId';
+    /**
+     * @var string name of the transaction entity attribute, which should store additional affected account ID.
+     * This attribute will be filled only at `transfer()` method execution and will store ID of the account transferred
+     * from or to, depending on the context.
+     * If not set, no information about the extra account context will be saved.
+     *
+     * Note: absence of this field will affect logic of some methods like [[revert()]].
+     */
+    public $extraAccountLinkAttribute;
     /**
      * @var string name of the account entity attribute, which should store current balance value.
      */
-    public $accountBalanceAttribute = 'balance';
+    public $accountBalanceAttribute;
     /**
      * @var string name of the transaction entity attribute, which should store date.
      */
@@ -47,6 +59,9 @@ abstract class Manager extends Component implements ManagerInterface
     public $dateAttributeValue;
 
 
+    /**
+     * @inheritdoc
+     */
     public function increase($account, $amount, $data = [])
     {
         $accountId = $this->fetchAccountId($account);
@@ -55,7 +70,7 @@ abstract class Manager extends Component implements ManagerInterface
             $data[$this->dateAttribute] = $this->getDateAttributeValue();
         }
         $data[$this->amountAttribute] = $amount;
-        $data[$this->accountAttribute] = $accountId;
+        $data[$this->accountLinkAttribute] = $accountId;
 
         if ($this->accountBalanceAttribute !== null) {
             $this->incrementAccountBalance($accountId, $amount);
@@ -64,32 +79,57 @@ abstract class Manager extends Component implements ManagerInterface
         return $this->writeTransaction($data);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function decrease($account, $amount, $data = [])
     {
         return $this->increase($account, -$amount, $data);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function transfer($from, $to, $amount, $data = [])
     {
         $fromId = $this->fetchAccountId($from);
         $toId = $this->fetchAccountId($to);
 
         $data[$this->dateAttribute] = $this->getDateAttributeValue();
+        $fromData = $data;
+        $toData = $data;
+
+        if ($this->extraAccountLinkAttribute !== null) {
+            $fromData[$this->extraAccountLinkAttribute] = $toId;
+            $toData[$this->extraAccountLinkAttribute] = $fromId;
+        }
 
         return [
-            $this->decrease($fromId, $amount, $data),
-            $this->increase($toId, $amount, $data)
+            $this->decrease($fromId, $amount, $fromData),
+            $this->increase($toId, $amount, $toData)
         ];
     }
 
-    public function revert($transactionId)
+    /**
+     * @inheritdoc
+     */
+    public function revert($transactionId, $data = [])
     {
-        ;
-    }
+        $transaction = $this->findTransaction($transactionId);
+        if (empty($transaction)) {
+            throw new InvalidParamException("Unable to find transaction '{$transactionId}'");
+        }
 
-    public function calculateBalance($account)
-    {
-        ;
+        $amount = $transaction[$this->amountAttribute];
+
+        if ($this->extraAccountLinkAttribute !== null && isset($transaction[$this->extraAccountLinkAttribute])) {
+            $fromId = $transaction[$this->accountLinkAttribute];
+            $toId = $transaction[$this->extraAccountLinkAttribute];
+            return $this->transfer($fromId, $toId, $amount, $data);
+        } else {
+            $accountId = $transaction[$this->accountLinkAttribute];
+            return $this->decrease($accountId, $amount, $data);
+        }
     }
 
     /**
@@ -120,6 +160,13 @@ abstract class Manager extends Component implements ManagerInterface
      * @return mixed|null account ID, `null` - if not found.
      */
     abstract protected function findAccountId($attributes);
+
+    /**
+     * Finds transaction data by ID.
+     * @param mixed $id transaction ID.
+     * @return array|null transaction data, `null` - if not found.
+     */
+    abstract protected function findTransaction($id);
 
     /**
      * Creates new account with given attributes.
