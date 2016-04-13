@@ -32,6 +32,10 @@ abstract class Manager extends Component implements ManagerInterface
      */
     public $accountAttribute = 'accountId';
     /**
+     * @var string name of the account entity attribute, which should store current balance value.
+     */
+    public $accountBalanceAttribute = 'balance';
+    /**
      * @var string name of the transaction entity attribute, which should store date.
      */
     public $dateAttribute = 'date';
@@ -52,6 +56,10 @@ abstract class Manager extends Component implements ManagerInterface
         }
         $data[$this->amountAttribute] = $amount;
         $data[$this->accountAttribute] = $accountId;
+
+        if ($this->accountBalanceAttribute !== null) {
+            $this->incrementAccountBalance($accountId, $amount);
+        }
 
         return $this->writeTransaction($data);
     }
@@ -75,6 +83,11 @@ abstract class Manager extends Component implements ManagerInterface
     }
 
     public function revert($transactionId)
+    {
+        ;
+    }
+
+    public function calculateBalance($account)
     {
         ;
     }
@@ -121,6 +134,13 @@ abstract class Manager extends Component implements ManagerInterface
      * @return mixed new transaction ID.
      */
     abstract protected function writeTransaction($attributes);
+
+    /**
+     * Increases current account balance value.
+     * @param mixed $accountId account ID.
+     * @param integer|float $amount amount to be added to the current balance.
+     */
+    abstract protected function incrementAccountBalance($accountId, $amount);
 
     /**
      * Returns actual now date value for the transaction.

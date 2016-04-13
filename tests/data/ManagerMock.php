@@ -12,6 +12,10 @@ class ManagerMock extends \yii2tech\balance\Manager
      */
     public $accounts = [];
     /**
+     * @var array account current balances.
+     */
+    public $accountBalances = [];
+    /**
      * @var array[] list of performed transactions
      */
     public $transactions = [];
@@ -54,5 +58,16 @@ class ManagerMock extends \yii2tech\balance\Manager
         $id = serialize($attributes);
         $this->accounts[$id] = $id;
         return $id;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function incrementAccountBalance($accountId, $amount)
+    {
+        if (!isset($this->accountBalances[$accountId])) {
+            $this->accountBalances[$accountId] = 0;
+        }
+        $this->accountBalances[$accountId] += $amount;
     }
 }

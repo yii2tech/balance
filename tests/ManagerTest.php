@@ -87,4 +87,24 @@ class ManagerTest extends TestCase
         $this->setExpectedException('yii\base\InvalidParamException');
         $manager->increase(['userId' => 10], 10);
     }
+
+    /**
+     * @depends testIncrease
+     */
+    public function testIncreaseAccountBalance()
+    {
+        $manager = new ManagerMock();
+
+        $manager->accountBalanceAttribute = 'balance';
+        $accountId = 10;
+        $amount = 50;
+        $manager->increase($accountId, $amount);
+        $this->assertEquals($amount, $manager->accountBalances[$accountId]);
+
+        $manager->accountBalanceAttribute = null;
+        $accountId = 20;
+        $amount = 40;
+        $manager->increase($accountId, $amount);
+        $this->assertArrayNotHasKey($accountId, $manager->accountBalances);
+    }
 }
