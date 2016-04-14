@@ -22,10 +22,35 @@ use yii\di\Instance;
  *     'components' => [
  *         'balanceManager' => [
  *             'class' => 'yii2tech\balance\ManagerDb',
+ *             'accountTable' => '{{%BalanceAccount}}',
+ *             'transactionTable' => '{{%BalanceTransaction}}',
+ *             'accountBalanceAttribute' => 'balance',
+ *             'extraAccountLinkAttribute' => 'extraAccountId',
+ *             'dataAttribute' => 'data',
  *         ],
  *     ],
  *     ...
  * ];
+ * ```
+ *
+ * Database migration example:
+ *
+ * ```php
+ * $this->createTable('BalanceAccount', [
+ *     'id' => $this->primaryKey(),
+ *     'balance' => $this->integer()->notNull()->defaultValue(0),
+ *     // ...
+ * ]);
+ *
+ * $this->createTable('BalanceTransaction', [
+ *     'id' => $this->primaryKey(),
+ *     'date' => $this->integer()->notNull(),
+ *     'accountId' => $this->integer()->notNull(),
+ *     'extraAccountId' => $this->integer()->notNull(),
+ *     'amount' => $this->integer()->notNull()->defaultValue(0),
+ *     'data' => $this->text(),
+ *     // ...
+ * ]);
  * ```
  *
  * @see Manager
@@ -35,6 +60,8 @@ use yii\di\Instance;
  */
 class ManagerDb extends Manager
 {
+    use ManagerDataSerializeTrait;
+
     /**
      * @var Connection|array|string the DB connection object or the application component ID of the DB connection.
      * After the ManagerDb object is created, if you want to change this property, you should only assign it
@@ -117,6 +144,7 @@ class ManagerDb extends Manager
         $id = (new Query())
             ->select([$this->getAccountIdAttribute()])
             ->from($this->accountTable)
+            ->andWhere($attributes)
             ->scalar($this->db);
 
         if ($id === false) {
@@ -133,8 +161,7 @@ class ManagerDb extends Manager
         $idAttribute = $this->getTransactionIdAttribute();
 
         $row = (new Query())
-            ->select([$idAttribute])
-            ->from($this->accountTable)
+            ->from($this->transactionTable)
             ->andWhere([$idAttribute => $id])
             ->one($this->db);
 
@@ -149,7 +176,11 @@ class ManagerDb extends Manager
      */
     protected function createAccount($attributes)
     {
-        return $this->db->getSchema()->insert($this->accountTable, $attributes);
+        $primaryKeys = $this->db->getSchema()->insert($this->accountTable, $attributes);
+        if (count($primaryKeys) > 1) {
+            return implode(',', $primaryKeys);
+        }
+        return array_shift($primaryKeys);
     }
 
     /**
@@ -157,7 +188,12 @@ class ManagerDb extends Manager
      */
     protected function writeTransaction($attributes)
     {
-        return $this->db->getSchema()->insert($this->transactionTable, $attributes);
+        $attributes = $this->serializeAttributes($attributes, $this->db->getTableSchema($this->transactionTable)->getColumnNames());
+        $primaryKeys = $this->db->getSchema()->insert($this->transactionTable, $attributes);
+        if (count($primaryKeys) > 1) {
+            return implode(',', $primaryKeys);
+        }
+        return array_shift($primaryKeys);
     }
 
     /**
@@ -165,7 +201,7 @@ class ManagerDb extends Manager
      */
     protected function incrementAccountBalance($accountId, $amount)
     {
-        $value = new Expression("[[{$this->accountBalanceAttribute}]] + :amount", ['amount' => $amount]);
+        $value = new Expression("[[{$this->accountBalanceAttribute}]]+:amount", ['amount' => $amount]);
         $this->db->createCommand()
             ->update($this->accountTable, [$this->accountBalanceAttribute => $value], [$this->getAccountIdAttribute() => $accountId])
             ->execute();
@@ -176,7 +212,7 @@ class ManagerDb extends Manager
      */
     public function calculateBalance($account)
     {
-        $accountId = $this->findAccountId($account);
+        $accountId = $this->fetchAccountId($account);
 
         return (new Query())
             ->from($this->transactionTable)
