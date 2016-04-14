@@ -168,7 +168,7 @@ class ManagerDb extends Manager
         if ($row === false) {
             return null;
         }
-        return $row;
+        return $this->unserializeAttributes($row);
     }
 
     /**
