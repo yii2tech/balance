@@ -106,6 +106,9 @@ Note that method `transfer()` creates 2 separated transactions: one per each aff
 all money transfer history for particular account, simply selecting all transactions linked to it. 'Debit' transactions
 will have positive amount, while 'credit' ones - negative.
 
+> Note: If you wish each transaction created by `transfer()` remember another account involved in the process, you'll need
+  to setup [[\yii2tech\balance\Manager::extraAccountLinkAttribute]].
+
 You may revert particular transaction using [[\yii2tech\balance\ManagerInterface::revert()]] method:
 
 ```php
