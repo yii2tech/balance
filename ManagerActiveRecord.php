@@ -40,7 +40,7 @@ use yii\db\BaseActiveRecord;
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
  */
-class ManagerActiveRecord extends Manager
+class ManagerActiveRecord extends ManagerDbTransaction
 {
     use ManagerDataSerializeTrait;
 
@@ -139,5 +139,20 @@ class ManagerActiveRecord extends Manager
         return $class::find()
             ->andWhere([$this->accountLinkAttribute => $accountId])
             ->sum($this->amountAttribute);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function createDbTransaction()
+    {
+        /* @var $class ActiveRecordInterface|BaseActiveRecord */
+        $class = $this->transactionClass;
+        $db = $class::getDb();
+        if ($db->hasMethod('beginTransaction')) {
+            return $db->beginTransaction();
+        }
+
+        return null;
     }
 }

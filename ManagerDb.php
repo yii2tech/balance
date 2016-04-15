@@ -58,7 +58,7 @@ use yii\di\Instance;
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
  */
-class ManagerDb extends Manager
+class ManagerDb extends ManagerDbTransaction
 {
     use ManagerDataSerializeTrait;
 
@@ -218,5 +218,13 @@ class ManagerDb extends Manager
             ->from($this->transactionTable)
             ->andWhere([$this->accountLinkAttribute => $accountId])
             ->sum($this->amountAttribute, $this->db);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function createDbTransaction()
+    {
+        return $this->db->beginTransaction();
     }
 }
