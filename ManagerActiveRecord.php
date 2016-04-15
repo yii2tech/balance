@@ -15,7 +15,7 @@ use yii\db\BaseActiveRecord;
  * ManagerActiveRecord is a balance manager, which uses ActiveRecord classes for data storage.
  * This manager allows usage of any storage, which have ActiveRecord interface implemented, such as
  * relational DB, MongoDB, Redis etc. However, it may lack efficiency comparing to the dedicated managers
- * like [[ManagerDb]].
+ * like [[ManagerDb]] or [[ManagerMongoDb]].
  *
  * Configuration example:
  *
