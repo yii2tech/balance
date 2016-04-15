@@ -7,6 +7,17 @@ php:
   - 7.0
   - hhvm
 
+# run build against hhvm but allow them to fail
+# http://docs.travis-ci.com/user/build-configuration/#Rows-That-are-Allowed-To-Fail
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: hhvm
+    - php: 7.0
+
+services:
+  - mongodb
+
 # faster builds on new travis setup not using sudo
 sudo: false
 
@@ -16,10 +27,12 @@ cache:
     - $HOME/.composer/cache
 
 install:
+  - tests/data/travis/mongodb-setup.sh
   - travis_retry composer self-update && composer --version
   - travis_retry composer global require "fxp/composer-asset-plugin:~1.1.1"
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - travis_retry composer install --prefer-dist --no-interaction
+  - travis_retry composer require yiisoft/yii2-mongodb --prefer-dist --no-interaction
 
 script:
   - phpunit --verbose $PHPUNIT_FLAGS
