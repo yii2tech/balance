@@ -149,6 +149,11 @@ class ManagerActiveRecord extends ManagerDbTransaction
         /* @var $class ActiveRecordInterface|BaseActiveRecord */
         $class = $this->transactionClass;
         $db = $class::getDb();
+
+        if ($db->hasMethod('getTransaction') && $db->getTransaction() !== null) {
+            return null;
+        }
+
         if ($db->hasMethod('beginTransaction')) {
             return $db->beginTransaction();
         }

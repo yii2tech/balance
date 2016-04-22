@@ -225,6 +225,9 @@ class ManagerDb extends ManagerDbTransaction
      */
     protected function createDbTransaction()
     {
+        if ($this->db->getTransaction() !== null) {
+            return null;
+        }
         return $this->db->beginTransaction();
     }
 }
