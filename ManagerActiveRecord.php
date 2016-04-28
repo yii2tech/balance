@@ -101,7 +101,7 @@ class ManagerActiveRecord extends ManagerDbTransaction
     /**
      * @inheritdoc
      */
-    protected function writeTransaction($attributes)
+    protected function createTransaction($attributes)
     {
         /* @var $class ActiveRecordInterface */
         $class = $this->transactionClass;

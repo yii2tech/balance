@@ -112,7 +112,7 @@ class ManagerMongoDb extends Manager
     /**
      * @inheritdoc
      */
-    protected function writeTransaction($attributes)
+    protected function createTransaction($attributes)
     {
         return $this->db->getCollection($this->transactionCollection)->insert($attributes);
     }

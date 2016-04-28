@@ -51,10 +51,12 @@ class ManagerMock extends \yii2tech\balance\Manager
     /**
      * @inheritdoc
      */
-    protected function writeTransaction($attributes)
+    protected function createTransaction($attributes)
     {
+        $transactionId = count($this->transactions);
+        $attributes['id'] = $transactionId;
         $this->transactions[] = $attributes;
-        return count($this->transactions) - 1;
+        return $transactionId;
     }
 
     /**

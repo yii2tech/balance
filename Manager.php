@@ -22,6 +22,17 @@ use yii\helpers\VarDumper;
 abstract class Manager extends Component implements ManagerInterface
 {
     /**
+     * @event TransactionEvent an event raised before creating new transaction. You may adjust
+     * [[TransactionEvent::transactionData]] changing actual data to be saved.
+     */
+    const EVENT_BEFORE_CREATE_TRANSACTION = 'beforeCreateTransaction';
+    /**
+     * @event TransactionEvent an event raised after new transaction has been created. You may use
+     * [[TransactionEvent::transactionId]] to get new transaction ID.
+     */
+    const EVENT_AFTER_CREATE_TRANSACTION = 'afterCreateTransaction';
+
+    /**
      * @var boolean whether to automatically create requested account, if it does not yet exist.
      */
     public $autoCreateAccount = true;
@@ -72,11 +83,16 @@ abstract class Manager extends Component implements ManagerInterface
         $data[$this->amountAttribute] = $amount;
         $data[$this->accountLinkAttribute] = $accountId;
 
-        if ($this->accountBalanceAttribute !== null) {
-            $this->incrementAccountBalance($accountId, $amount);
-        }
+        $data = $this->beforeCreateTransaction($accountId, $data);
 
-        return $this->writeTransaction($data);
+        if ($this->accountBalanceAttribute !== null) {
+            $this->incrementAccountBalance($accountId, $data[$this->amountAttribute]);
+        }
+        $transactionId = $this->createTransaction($data);
+
+        $this->afterCreateTransaction($transactionId, $accountId, $data);
+
+        return $transactionId;
     }
 
     /**
@@ -180,7 +196,7 @@ abstract class Manager extends Component implements ManagerInterface
      * @param array $attributes attributes associated with transaction in format: attribute => value
      * @return mixed new transaction ID.
      */
-    abstract protected function writeTransaction($attributes);
+    abstract protected function createTransaction($attributes);
 
     /**
      * Increases current account balance value.
@@ -202,5 +218,40 @@ abstract class Manager extends Component implements ManagerInterface
             return call_user_func($this->dateAttributeValue);
         }
         return $this->dateAttributeValue;
+    }
+
+    // Events :
+
+    /**
+     * This method is invoked before creating transaction.
+     * @param mixed $accountId account ID.
+     * @param array $data transaction data.
+     * @return array adjusted transaction data.
+     */
+    protected function beforeCreateTransaction($accountId, $data)
+    {
+        $event = new TransactionEvent([
+            'accountId' => $accountId,
+            'transactionData' => $data
+        ]);
+        $this->trigger(self::EVENT_BEFORE_CREATE_TRANSACTION, $event);
+        return $event->transactionData;
+    }
+
+    /**
+     * This method is invoked after transaction has been created.
+     * @param mixed $transactionId transaction ID.
+     * @param mixed $accountId account ID.
+     * @param array $data transaction data.
+     * @return array adjusted transaction data.
+     */
+    protected function afterCreateTransaction($transactionId, $accountId, $data)
+    {
+        $event = new TransactionEvent([
+            'transactionId' => $transactionId,
+            'accountId' => $accountId,
+            'transactionData' => $data
+        ]);
+        $this->trigger(self::EVENT_AFTER_CREATE_TRANSACTION, $event);
     }
 }

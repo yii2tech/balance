@@ -2,6 +2,8 @@
 
 namespace yii2tech\tests\unit\balance;
 
+use yii2tech\balance\Manager;
+use yii2tech\balance\TransactionEvent;
 use yii2tech\tests\unit\balance\data\ManagerMock;
 
 class ManagerTest extends TestCase
@@ -146,5 +148,39 @@ class ManagerTest extends TestCase
 
         $this->assertEquals(0, $manager->accountBalances[$fromId]);
         $this->assertEquals(0, $manager->accountBalances[$toId]);
+    }
+
+    /**
+     * @depends testIncrease
+     */
+    public function testEventBeforeCreateTransaction()
+    {
+        $manager = new ManagerMock();
+        $manager->on(Manager::EVENT_BEFORE_CREATE_TRANSACTION, function ($event) {
+            /* @var $event TransactionEvent */
+            $event->transactionData['extra'] = 'event';
+        });
+
+        $manager->increase(1, 50);
+        $transaction = $manager->getLastTransaction();
+        $this->assertEquals('event', $transaction['extra']);
+    }
+
+    /**
+     * @depends testIncrease
+     */
+    public function testEventAfterCreateTransaction()
+    {
+        $manager = new ManagerMock();
+        $eventTransactionId = null;
+        $manager->on(Manager::EVENT_AFTER_CREATE_TRANSACTION, function ($event) use (&$eventTransactionId) {
+            /* @var $event TransactionEvent */
+            $eventTransactionId = $event->transactionId;
+        });
+
+        $manager->increase(1, 50);
+        $transaction = $manager->getLastTransaction();
+        $this->assertNotNull($eventTransactionId);
+        $this->assertSame($eventTransactionId, $transaction['id']);
     }
 }

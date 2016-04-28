@@ -14,7 +14,7 @@ class ManagerDataSerialize extends ManagerMock
     /**
      * @inheritdoc
      */
-    protected function writeTransaction($attributes)
+    protected function createTransaction($attributes)
     {
         static $allowedAttributes = [
             'date',
@@ -23,7 +23,7 @@ class ManagerDataSerialize extends ManagerMock
         ];
         $attributes = $this->serializeAttributes($attributes, $allowedAttributes);
 
-        return parent::writeTransaction($attributes);
+        return parent::createTransaction($attributes);
     }
 
     /**
