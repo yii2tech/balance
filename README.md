@@ -142,10 +142,10 @@ Yii::$app->balanceManager->transfer(
 In this example balance manager will find Id of the affected accounts automatically, using provided attributes as a filter.
 
 You may enable [[yii2tech\balance\Manager::autoCreateAccount]], allowing automatic creation of the missing accounts, if they
-are specified as attributes set. This allows accounts creation on the fly by demand only, eliminating necessity of their
+are specified as attributes set. This allows accounts creation on the fly, by demand only, eliminating necessity of their
 pre-creation.
 
-**Heads up!** Actually 'account' entity is redundant at balance system and its usage can be avoided. However its presence
+**Heads up!** Actually 'account' entity is redundant at balance system, and its usage can be avoided. However, its presence
 provides more flexibility and saves performance. Storing of account data is not mandatory for this extension, you can
 configure your balance manager in the way it is not used.
 
@@ -224,3 +224,32 @@ The way extra attributes are stored in the data storage depends on particular ba
 For example: [[\yii2tech\balance\ManagerDb]] will try to store extra inside transaction table columns, if their name
 equals the parameter name. You may as well setup special data field via [[\yii2tech\balance\ManagerDb::dataAttribute]],
 which will store all extra parameters, which have no matching column, in serialized state.
+
+
+## Events <span id="events"></span>
+
+[[\yii2tech\balance\Manager]] provide several events, which can be handled via event handler or behavior:
+
+ - [[yii2tech\balance\Manager::EVENT_BEFORE_CREATE_TRANSACTION]] - raised before creating new transaction.
+ - [[yii2tech\balance\Manager::EVENT_AFTER_CREATE_TRANSACTION]] - raised after creating new transaction.
+
+For example:
+
+```php
+use yii2tech\balance\Manager;
+use yii2tech\balance\ManagerDb;
+
+$manager = new ManagerDb();
+
+$manager->on(Manager::EVENT_BEFORE_CREATE_TRANSACTION, function ($event) {
+    $event->transactionData['amount'] += 10; // you may adjust transaction data to be saved, including transaction amount
+    $event->transactionData['comment'] = 'adjusted by event handler';
+});
+
+$manager->on(Manager::EVENT_AFTER_CREATE_TRANSACTION, function ($event) {
+    echo 'new transaction: ' $event->transactionId; // you may get newly created transaction ID
+});
+
+$manager->increase(1, 100); // outputs: 'new transaction: 1'
+echo Yii::$app->balanceManager->calculateBalance(1); // outputs: 110
+```
