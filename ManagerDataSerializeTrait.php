@@ -7,8 +7,7 @@
 
 namespace yii2tech\balance;
 
-use yii\base\InvalidConfigException;
-use yii\helpers\Json;
+use yii\di\Instance;
 
 /**
  * ManagerDataSerializeTrait provides ability to serialize extra attributes into the single field.
@@ -16,6 +15,9 @@ use yii\helpers\Json;
  * This trait supposed to be used inside descendant of [[Manager]].
  *
  * @see Manager
+ * @see SerializerInterface
+ *
+ * @property string|array|SerializerInterface $serializer serializer instance or its configuration.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
@@ -27,67 +29,42 @@ trait ManagerDataSerializeTrait
      */
     public $dataAttribute = 'data';
     /**
-     * @var string|callable serialize method. Following methods are supported:
+     * @var string|array|SerializerInterface serializer instance or its configuration.
+     * Following shortcuts are supported:
      *
-     * - 'php' - use native PHP `serialize()` and `unserialize()` methods
-     * - 'json' - use JSON format for serialization.
+     * - 'php' - use [[PhpSerializer]]
+     * - 'json' - use [[JsonSerializer]]
      *
-     * This can be a PHP callback, which will be used for both(!) serialize and unserialize.
-     * Such callback should determine which operation needed based on incoming argument.s
+     * Using array configuration, you may omit 'class' parameter, in this case [[CallbackSerializer]] will be used.
      * For example:
      *
      * ```php
-     * function ($value) {
-     *     if (is_string($value)) {
-     *         return unserialize($value);
-     *     }
-     *     return serialize($value);
-     * }
+     * [
+     *     'serialize' => function ($value) { return serialize($value); },
+     *     'unserialize' => function ($value) { return unserialize($value); },
+     * ]
      * ```
      */
-    public $serializeMethod = 'json';
+    private $_serializer = 'json';
 
 
     /**
-     * Serializes given data.
-     * @param array $data data to be serialized
-     * @return string serialized data.
-     * @throws InvalidConfigException on invalid [[serializeMethod]]
+     * @return SerializerInterface serializer instance
      */
-    protected function serialize($data)
+    public function getSerializer()
     {
-        if (is_scalar($this->serializeMethod)) {
-            switch ($this->serializeMethod) {
-                case 'php':
-                    return serialize($data);
-                case 'json':
-                    return Json::encode($data);
-                default:
-                    throw new InvalidConfigException("Unrecognized serialize method '{$this->serializeMethod}'");
-            }
+        if (!is_object($this->_serializer)) {
+            $this->_serializer = $this->createSerializer($this->_serializer);
         }
-        return call_user_func($this->serializeMethod, $data);
+        return $this->_serializer;
     }
 
     /**
-     * Unserializes given data.
-     * @param string $data serialized data
-     * @return array unserialized data.
-     * @throws InvalidConfigException on invalid [[serializeMethod]]
+     * @param SerializerInterface|array|string $serializer serializer to be used
      */
-    protected function unserialize($data)
+    public function setSerializer($serializer)
     {
-        if (is_scalar($this->serializeMethod)) {
-            switch ($this->serializeMethod) {
-                case 'php':
-                    return unserialize($data);
-                case 'json':
-                    return Json::decode($data);
-                default:
-                    throw new InvalidConfigException("Unrecognized serialize method '{$this->serializeMethod}'");
-            }
-        }
-        return call_user_func($this->serializeMethod, $data);
+        $this->_serializer = $serializer;
     }
 
     /**
@@ -112,7 +89,7 @@ trait ManagerDataSerializeTrait
             }
         }
         if (!empty($dataAttributes)) {
-            $safeAttributes[$this->dataAttribute] = $this->serialize($dataAttributes);
+            $safeAttributes[$this->dataAttribute] = $this->getSerializer()->serialize($dataAttributes);
         }
 
         return $safeAttributes;
@@ -135,8 +112,36 @@ trait ManagerDataSerializeTrait
             return $attributes;
         }
 
-        $dataAttributes = $this->unserialize($attributes[$this->dataAttribute]);
+        $dataAttributes = $this->getSerializer()->unserialize($attributes[$this->dataAttribute]);
         unset($attributes[$this->dataAttribute]);
         return array_merge($attributes, $dataAttributes);
+    }
+
+    /**
+     * Creates serializer from given configuration.
+     * @param string|array $config serializer configuration.
+     * @return SerializerInterface serializer instance
+     */
+    protected function createSerializer($config)
+    {
+        if (is_string($config)) {
+            switch ($config) {
+                case 'php':
+                    $config = [
+                        'class' => PhpSerializer::className()
+                    ];
+                    break;
+                case 'json':
+                    $config = [
+                        'class' => JsonSerializer::className()
+                    ];
+                    break;
+            }
+        } elseif (is_array($config)) {
+            if (!isset($config['class'])) {
+                $config['class'] = CallbackSerializer::className();
+            }
+        }
+        return Instance::ensure($config, 'yii2tech\balance\SerializerInterface');
     }
 }

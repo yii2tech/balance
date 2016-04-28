@@ -15,12 +15,19 @@ class ManagerDataSerializeTraitTest extends TestCase
             ['json'],
             ['php'],
             [
-                function ($value) {
-                    if (is_string($value)) {
+                [
+                    'serialize' => function ($value) {
+                        return serialize($value);
+                    },
+                    'unserialize' => function ($value) {
                         return unserialize($value);
-                    }
-                    return serialize($value);
-                }
+                    },
+                ]
+            ],
+            [
+                [
+                    'class' => 'yii2tech\balance\PhpSerializer'
+                ]
             ],
         ];
     }
@@ -28,12 +35,12 @@ class ManagerDataSerializeTraitTest extends TestCase
     /**
      * @dataProvider dataProviderSerializeMethod
      *
-     * @param string|callable $serializeMethod
+     * @param string|array $serializer
      */
-    public function testSerialize($serializeMethod)
+    public function testSerialize($serializer)
     {
         $manager = new ManagerDataSerialize();
-        $manager->serializeMethod = $serializeMethod;
+        $manager->serializer = $serializer;
 
         $manager->increase(1, 50, ['extra' => 'custom']);
         $transaction = $manager->getLastTransaction();
@@ -45,12 +52,12 @@ class ManagerDataSerializeTraitTest extends TestCase
      * @depends testSerialize
      * @dataProvider dataProviderSerializeMethod
      *
-     * @param string|callable $serializeMethod
+     * @param string|array $serializer
      */
-    public function testUnserialize($serializeMethod)
+    public function testUnserialize($serializer)
     {
         $manager = new ManagerDataSerialize();
-        $manager->serializeMethod = $serializeMethod;
+        $manager->serializer = $serializer;
         $manager->extraAccountLinkAttribute = 'extraAccountId';
 
         $fromId = 10;
