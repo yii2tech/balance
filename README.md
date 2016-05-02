@@ -166,7 +166,7 @@ However, calculating current balance each time you need it, is not efficient. Th
 entity, which will be used to store current account balance. This can be done via [[\yii2tech\balance\Manager::accountBalanceAttribute]].
 Each time balance manager performs a transaction it will update this attribute accordingly:
 
-```
+```php
 use yii\db\Query;
 
 Yii::$app->balanceManager->transfer($fromAccountId, $toAccountId, 100); // assume this is first time accounts are affected
