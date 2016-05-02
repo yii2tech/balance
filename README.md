@@ -139,7 +139,7 @@ Yii::$app->balanceManager->transfer(
 );
 ```
 
-In this example balance manager will find Id of the affected accounts automatically, using provided attributes as a filter.
+In this example balance manager will find ID of the affected accounts automatically, using provided attributes as a filter.
 
 You may enable [[yii2tech\balance\Manager::autoCreateAccount]], allowing automatic creation of the missing accounts, if they
 are specified as attributes set. This allows accounts creation on the fly, by demand only, eliminating necessity of their
