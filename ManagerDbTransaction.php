@@ -18,9 +18,9 @@ namespace yii2tech\balance;
 abstract class ManagerDbTransaction extends Manager
 {
     /**
-     * @var object|\yii\db\Transaction current transaction instance.
+     * @var array internal transaction instances stack.
      */
-    private $dbTransaction;
+    private $dbTransactions = [];
 
 
     /**
@@ -76,7 +76,7 @@ abstract class ManagerDbTransaction extends Manager
      */
     protected function beginDbTransaction()
     {
-        $this->dbTransaction = $this->createDbTransaction();
+        $this->dbTransactions[] = $this->createDbTransaction();
     }
 
     /**
@@ -84,10 +84,10 @@ abstract class ManagerDbTransaction extends Manager
      */
     protected function commitDbTransaction()
     {
-        if ($this->dbTransaction !== null) {
-            $this->dbTransaction->commit();
+        $transaction = array_pop($this->dbTransactions);
+        if ($transaction !== null) {
+            $transaction->commit();
         }
-        $this->dbTransaction = null;
     }
 
     /**
@@ -95,10 +95,10 @@ abstract class ManagerDbTransaction extends Manager
      */
     protected function rollBackDbTransaction()
     {
-        if ($this->dbTransaction !== null) {
-            $this->dbTransaction->rollBack();
+        $transaction = array_pop($this->dbTransactions);
+        if ($transaction !== null) {
+            $transaction->rollBack();
         }
-        $this->dbTransaction = null;
     }
 
     /**
