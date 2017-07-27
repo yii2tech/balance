@@ -18,7 +18,7 @@ interface ManagerInterface
     /**
      * Increases account current balance ('debit' operation).
      * @param array|mixed $account  account ID or filter condition.
-     * @param integer|float $amount amount.
+     * @param int|float $amount amount.
      * @param array $data extra data, which should be associated with the transaction
      * @return mixed transaction ID.
      */
@@ -27,7 +27,7 @@ interface ManagerInterface
     /**
      * Decreases account current balance ('credit' operation).
      * @param array|mixed $account account ID or filter condition.
-     * @param integer|float $amount amount.
+     * @param int|float $amount amount.
      * @param array $data extra data, which should be associated with the transaction.
      * @return mixed transaction ID.
      */
@@ -37,7 +37,7 @@ interface ManagerInterface
      * Transfers amount from one account to the other one.
      * @param array|mixed $from account ID or filter condition.
      * @param array|mixed $to account ID or filter condition.
-     * @param integer|float $amount amount.
+     * @param int|float $amount amount.
      * @param array $data extra data, which should be associated with the transaction.
      * @return array list of created transaction IDs.
      */
@@ -57,7 +57,7 @@ interface ManagerInterface
     /**
      * Calculates current account balance summarizing all related transactions.
      * @param array|mixed $account account ID or filter condition.
-     * @return integer|float current balance.
+     * @return int|float current balance.
      */
     public function calculateBalance($account);
 }

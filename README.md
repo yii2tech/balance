@@ -1,5 +1,10 @@
-Balance Accounting System extension for Yii2
-============================================
+<p align="center">
+    <a href="https://github.com/yii2tech" target="_blank">
+        <img src="https://avatars2.githubusercontent.com/u/12951949" height="100px">
+    </a>
+    <h1 align="center">Balance Accounting System extension for Yii2</h1>
+    <br>
+</p>
 
 This extension provides basic support for balance accounting (bookkeeping) system based on [debit and credit](https://en.wikipedia.org/wiki/Debits_and_credits) principle.
 
@@ -107,7 +112,7 @@ all money transfer history for particular account, simply selecting all transact
 will have positive amount, while 'credit' ones - negative.
 
 > Note: If you wish each transaction created by `transfer()` remember another account involved in the process, you'll need
-  to setup [[\yii2tech\balance\Manager::extraAccountLinkAttribute]].
+  to setup [[\yii2tech\balance\Manager::$extraAccountLinkAttribute]].
 
 You may revert particular transaction using [[\yii2tech\balance\ManagerInterface::revert()]] method:
 
@@ -141,7 +146,7 @@ Yii::$app->balanceManager->transfer(
 
 In this example balance manager will find ID of the affected accounts automatically, using provided attributes as a filter.
 
-You may enable [[yii2tech\balance\Manager::autoCreateAccount]], allowing automatic creation of the missing accounts, if they
+You may enable [[yii2tech\balance\Manager::$autoCreateAccount]], allowing automatic creation of the missing accounts, if they
 are specified as attributes set. This allows accounts creation on the fly, by demand only, eliminating necessity of their
 pre-creation.
 
@@ -163,7 +168,7 @@ echo Yii::$app->balanceManager->calculateBalance($toAccount); // outputs: 100
 ```
 
 However, calculating current balance each time you need it, is not efficient. Thus you can specify an attribute of account
-entity, which will be used to store current account balance. This can be done via [[\yii2tech\balance\Manager::accountBalanceAttribute]].
+entity, which will be used to store current account balance. This can be done via [[\yii2tech\balance\Manager::$accountBalanceAttribute]].
 Each time balance manager performs a transaction it will update this attribute accordingly:
 
 ```php
@@ -222,7 +227,7 @@ Yii::$app->balanceManager->transfer(
 
 The way extra attributes are stored in the data storage depends on particular balance manager implementation.
 For example: [[\yii2tech\balance\ManagerDb]] will try to store extra inside transaction table columns, if their name
-equals the parameter name. You may as well setup special data field via [[\yii2tech\balance\ManagerDb::dataAttribute]],
+equals the parameter name. You may as well setup special data field via [[\yii2tech\balance\ManagerDb::$dataAttribute]],
 which will store all extra parameters, which have no matching column, in serialized state.
 
 

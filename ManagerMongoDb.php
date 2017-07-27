@@ -15,6 +15,11 @@ use yii\mongodb\Query;
  * ManagerMongoDb is a balance manager, which uses MongoDB as data storage.
  *
  * This storage requires [yiisoft/yii2-mongodb](https://github.com/yiisoft/yii2-mongodb) extension installed.
+ * This can be done via composer:
+ *
+ * ```
+ * composer require --prefer-dist yiisoft/yii2-mongodb
+ * ```
  *
  * Configuration example:
  *

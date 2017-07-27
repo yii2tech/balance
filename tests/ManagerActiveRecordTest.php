@@ -98,7 +98,7 @@ class ManagerActiveRecordTest extends TestCase
         $this->assertEquals(5, $accounts[0]['userId']);
 
         $manager->autoCreateAccount = false;
-        $this->setExpectedException('yii\base\InvalidParamException');
+        $this->expectException('yii\base\InvalidParamException');
         $manager->increase(['userId' => 10], 10);
     }
 

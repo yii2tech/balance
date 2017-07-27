@@ -33,7 +33,7 @@ abstract class Manager extends Component implements ManagerInterface
     const EVENT_AFTER_CREATE_TRANSACTION = 'afterCreateTransaction';
 
     /**
-     * @var boolean whether to automatically create requested account, if it does not yet exist.
+     * @var bool whether to automatically create requested account, if it does not yet exist.
      */
     public $autoCreateAccount = true;
     /**
@@ -201,7 +201,7 @@ abstract class Manager extends Component implements ManagerInterface
     /**
      * Increases current account balance value.
      * @param mixed $accountId account ID.
-     * @param integer|float $amount amount to be added to the current balance.
+     * @param int|float $amount amount to be added to the current balance.
      */
     abstract protected function incrementAccountBalance($accountId, $amount);
 

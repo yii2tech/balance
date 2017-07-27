@@ -5,10 +5,10 @@ namespace yii2tech\tests\unit\balance\data;
 use yii\db\ActiveRecord;
 
 /**
- * @property integer $id
- * @property integer $date
- * @property integer $accountId
- * @property integer $amount
+ * @property int $id
+ * @property int $date
+ * @property int $accountId
+ * @property int $amount
  * @property string $data
  */
 class BalanceTransaction extends ActiveRecord
