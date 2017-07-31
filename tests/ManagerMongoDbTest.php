@@ -45,7 +45,7 @@ class ManagerMongoDbTest extends TestCase
     protected function getDb()
     {
         if ($this->db === null) {
-            if (!extension_loaded('mongo')) {
+            if (!extension_loaded('mongodb')) {
                 $this->markTestSkipped('mongo PHP extension required.');
                 return null;
             }
