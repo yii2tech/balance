@@ -53,6 +53,12 @@ use yii\di\Instance;
  * ]);
  * ```
  *
+ * This manager will attempt to save value from transaction data in the table column, which name matches data key.
+ * If such column does not exist data will be saved in [[dataAttribute]] column in serialized state.
+ *
+ * > Note: watch for the keys you use in transaction data: make sure they do not conflict with columns, which are
+ *   reserved for other purposes, like primary keys.
+ *
  * @see Manager
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
@@ -188,7 +194,14 @@ class ManagerDb extends ManagerDbTransaction
      */
     protected function createTransaction($attributes)
     {
-        $attributes = $this->serializeAttributes($attributes, $this->db->getTableSchema($this->transactionTable)->getColumnNames());
+        $allowedAttributes = [];
+        foreach ($this->db->getTableSchema($this->transactionTable)->columns as $column) {
+            if ($column->isPrimaryKey && $column->autoIncrement) {
+                continue;
+            }
+            $allowedAttributes[] = $column->name;
+        }
+        $attributes = $this->serializeAttributes($attributes, $allowedAttributes);
         $primaryKeys = $this->db->getSchema()->insert($this->transactionTable, $attributes);
         if (count($primaryKeys) > 1) {
             return implode(',', $primaryKeys);

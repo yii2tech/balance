@@ -35,6 +35,12 @@ use yii\db\BaseActiveRecord;
  * ];
  * ```
  *
+ * This manager will attempt to save value from transaction data in the attribute, which name matches data key.
+ * If such attribute does not exist data will be saved in [[dataAttribute]] column in serialized state.
+ *
+ * > Note: watch for the keys you use in transaction data: make sure they do not conflict with attributes, which are
+ *   reserved for other purposes, like primary keys.
+ *
  * @see Manager
  *
  * @author Paul Klimov <klimov.paul@gmail.com>

@@ -136,4 +136,25 @@ class ManagerDbTest extends TestCase
 
         $this->assertEquals(25, $manager->calculateBalance(1));
     }
+
+    /**
+     * @see https://github.com/yii2tech/balance/issues/11
+     *
+     * @depends testIncrease
+     */
+    public function testSkipAutoIncrement()
+    {
+        $manager = new ManagerDb();
+
+        $manager->transfer(
+            1,
+            2,
+            10,
+            [
+                'id' => 123456789,
+            ]
+        );
+        $transaction = $this->getLastTransaction();
+        $this->assertContains('123456789', $transaction['data']);
+    }
 }

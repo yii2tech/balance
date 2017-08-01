@@ -230,6 +230,9 @@ For example: [[\yii2tech\balance\ManagerDb]] will try to store extra inside tran
 equals the parameter name. You may as well setup special data field via [[\yii2tech\balance\ManagerDb::$dataAttribute]],
 which will store all extra parameters, which have no matching column, in serialized state.
 
+> Note: watch for the keys you use in transaction data: make sure they do not conflict with columns, which are
+  reserved for other purposes, like primary keys.
+
 
 ## Events <span id="events"></span>
 
