@@ -104,6 +104,12 @@ class ManagerDbTest extends TestCase
         $account = (new Query())->from('BalanceAccount')->andWhere(['userId' => 1])->one();
 
         $this->assertEquals($amount, $account['balance']);
+
+        // update :
+        $amount = 50;
+        $manager->increase(['userId' => 1], $amount);
+        $account = (new Query())->from('BalanceAccount')->andWhere(['userId' => 1])->one();
+        $this->assertEquals(100, $account['balance']);
     }
 
     /**
