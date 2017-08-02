@@ -34,7 +34,6 @@ cache:
 install:
   - tests/data/travis/mongodb-setup.sh
   - travis_retry composer self-update && composer --version
-  - travis_retry composer global require "fxp/composer-asset-plugin:^1.3.1"
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - travis_retry composer install --prefer-dist --no-interaction
   - travis_retry composer require "yiisoft/yii2-mongodb:~2.1.0" --prefer-dist --no-interaction
