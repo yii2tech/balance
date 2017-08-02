@@ -65,7 +65,7 @@ class ManagerMongoDb extends Manager
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function init()
     {
@@ -74,7 +74,7 @@ class ManagerMongoDb extends Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function findAccountId($attributes)
     {
@@ -91,7 +91,7 @@ class ManagerMongoDb extends Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function findTransaction($id)
     {
@@ -107,7 +107,7 @@ class ManagerMongoDb extends Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createAccount($attributes)
     {
@@ -115,7 +115,7 @@ class ManagerMongoDb extends Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createTransaction($attributes)
     {
@@ -123,7 +123,7 @@ class ManagerMongoDb extends Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function incrementAccountBalance($accountId, $amount)
     {
@@ -131,7 +131,7 @@ class ManagerMongoDb extends Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function calculateBalance($account)
     {

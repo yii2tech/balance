@@ -18,7 +18,7 @@ use yii\base\Object;
 class PhpSerializer extends Object implements SerializerInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function serialize($value)
     {
@@ -26,7 +26,7 @@ class PhpSerializer extends Object implements SerializerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function unserialize($value)
     {

@@ -40,7 +40,7 @@ class ManagerMock extends \yii2tech\balance\Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function calculateBalance($account)
     {
@@ -49,7 +49,7 @@ class ManagerMock extends \yii2tech\balance\Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createTransaction($attributes)
     {
@@ -60,7 +60,7 @@ class ManagerMock extends \yii2tech\balance\Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function findAccountId($attributes)
     {
@@ -72,7 +72,7 @@ class ManagerMock extends \yii2tech\balance\Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createAccount($attributes)
     {
@@ -82,7 +82,7 @@ class ManagerMock extends \yii2tech\balance\Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function incrementAccountBalance($accountId, $amount)
     {
@@ -93,7 +93,7 @@ class ManagerMock extends \yii2tech\balance\Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function findTransaction($id)
     {

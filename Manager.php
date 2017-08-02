@@ -71,7 +71,7 @@ abstract class Manager extends Component implements ManagerInterface
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function increase($account, $amount, $data = [])
     {
@@ -96,7 +96,7 @@ abstract class Manager extends Component implements ManagerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function decrease($account, $amount, $data = [])
     {
@@ -104,7 +104,7 @@ abstract class Manager extends Component implements ManagerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function transfer($from, $to, $amount, $data = [])
     {
@@ -127,7 +127,7 @@ abstract class Manager extends Component implements ManagerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function revert($transactionId, $data = [])
     {

@@ -14,7 +14,7 @@ use yii\db\ActiveRecord;
 class BalanceTransaction extends ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {

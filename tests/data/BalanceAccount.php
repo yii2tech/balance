@@ -12,7 +12,7 @@ use yii\db\ActiveRecord;
 class BalanceAccount extends ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {

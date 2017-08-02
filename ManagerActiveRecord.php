@@ -61,7 +61,7 @@ class ManagerActiveRecord extends ManagerDbTransaction
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function findAccountId($attributes)
     {
@@ -76,7 +76,7 @@ class ManagerActiveRecord extends ManagerDbTransaction
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function findTransaction($id)
     {
@@ -91,7 +91,7 @@ class ManagerActiveRecord extends ManagerDbTransaction
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createAccount($attributes)
     {
@@ -105,7 +105,7 @@ class ManagerActiveRecord extends ManagerDbTransaction
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createTransaction($attributes)
     {
@@ -119,7 +119,7 @@ class ManagerActiveRecord extends ManagerDbTransaction
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function incrementAccountBalance($accountId, $amount)
     {
@@ -133,7 +133,7 @@ class ManagerActiveRecord extends ManagerDbTransaction
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function calculateBalance($account)
     {
@@ -148,7 +148,7 @@ class ManagerActiveRecord extends ManagerDbTransaction
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createDbTransaction()
     {

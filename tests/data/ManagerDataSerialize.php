@@ -12,7 +12,7 @@ class ManagerDataSerialize extends ManagerMock
     use ManagerDataSerializeTrait;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function createTransaction($attributes)
     {
@@ -27,7 +27,7 @@ class ManagerDataSerialize extends ManagerMock
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function findTransaction($id)
     {

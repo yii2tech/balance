@@ -28,7 +28,7 @@ class CallbackSerializer extends Object implements SerializerInterface
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function serialize($value)
     {
@@ -36,7 +36,7 @@ class CallbackSerializer extends Object implements SerializerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function unserialize($value)
     {

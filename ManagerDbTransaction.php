@@ -24,7 +24,7 @@ abstract class ManagerDbTransaction extends Manager
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function increase($account, $amount, $data = [])
     {
@@ -40,7 +40,7 @@ abstract class ManagerDbTransaction extends Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function transfer($from, $to, $amount, $data = [])
     {
@@ -56,7 +56,7 @@ abstract class ManagerDbTransaction extends Manager
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function revert($transactionId, $data = [])
     {
