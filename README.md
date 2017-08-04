@@ -98,7 +98,7 @@ Yii::$app->balanceManager->decrease($accountId, 100); // remove 100 credits from
 > Tip: actually, method `decrease()` is redundant, you can call `increase()` with negative amount in order to achieve same result.
 
 It is unlikely you will use plain `increase()` and `decrease()` methods in your application. In most cases there is a need
-to *transfer* money from one account to another at once. Method [[\yii2tech\balance\ManagerInterface::transfer()]] can be
+to **transfer** money from one account to another at once. Method [[\yii2tech\balance\ManagerInterface::transfer()]] can be
 used for this:
 
 ```php
@@ -226,7 +226,7 @@ Yii::$app->balanceManager->transfer(
 ```
 
 The way extra attributes are stored in the data storage depends on particular balance manager implementation.
-For example: [[\yii2tech\balance\ManagerDb]] will try to store extra inside transaction table columns, if their name
+For example: [[\yii2tech\balance\ManagerDb]] will try to store extra data inside transaction table columns, if their name
 equals the parameter name. You may as well setup special data field via [[\yii2tech\balance\ManagerDb::$dataAttribute]],
 which will store all extra parameters, which have no matching column, in serialized state.
 
