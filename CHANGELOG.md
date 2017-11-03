@@ -1,7 +1,7 @@
 Yii 2 Balance Accounting System extension Change Log
 ====================================================
 
-1.0.2 under development
+1.0.2, November 3, 2017
 -----------------------
 
 - Bug #11: Fixed `ManagerDb` considers autoincrement primary key being allowed for direct transaction data saving (klimov-paul)
