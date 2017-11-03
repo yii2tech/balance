@@ -5,6 +5,7 @@ Yii 2 Balance Accounting System extension Change Log
 -----------------------
 
 - Bug #11: Fixed `ManagerDb` considers autoincrement primary key being allowed for direct transaction data saving (klimov-paul)
+- Bug: Usage of deprecated `yii\base\Object` changed to `yii\base\BaseObject` allowing compatibility with PHP 7.2 (klimov-paul)
 
 
 1.0.1, July 27, 2016

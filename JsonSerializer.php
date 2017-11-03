@@ -7,7 +7,7 @@
 
 namespace yii2tech\balance;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\helpers\Json;
 
 /**
@@ -16,7 +16,7 @@ use yii\helpers\Json;
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
  */
-class JsonSerializer extends Object implements SerializerInterface
+class JsonSerializer extends BaseObject implements SerializerInterface
 {
     /**
      * @var int the encoding options. For more details please refer to

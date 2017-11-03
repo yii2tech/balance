@@ -7,7 +7,7 @@
 
 namespace yii2tech\balance;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * CallbackSerializer serializes data via custom PHP callback.
@@ -15,7 +15,7 @@ use yii\base\Object;
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 1.0
  */
-class CallbackSerializer extends Object implements SerializerInterface
+class CallbackSerializer extends BaseObject implements SerializerInterface
 {
     /**
      * @var callable PHP callback, which should be used to serialize value.
