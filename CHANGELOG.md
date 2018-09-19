@@ -1,8 +1,8 @@
 Yii 2 Balance Accounting System extension Change Log
 ====================================================
 
-1.0.3 under development
------------------------
+1.0.3, September 19, 2018
+-------------------------
 
 - Enh: Usage of deprecated `yii\base\InvalidParamException` changed to `yii\base\InvalidArgumentException` one (klimov-paul)
 
