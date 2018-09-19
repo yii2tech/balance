@@ -87,7 +87,7 @@ class ManagerTest extends TestCase
         $this->assertCount(1, $manager->accounts);
 
         $manager->autoCreateAccount = false;
-        $this->expectException('yii\base\InvalidParamException');
+        $this->expectException('yii\base\InvalidArgumentException');
         $manager->increase(['userId' => 10], 10);
     }
 

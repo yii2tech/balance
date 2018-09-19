@@ -8,7 +8,7 @@
 namespace yii2tech\balance;
 
 use yii\base\Component;
-use yii\base\InvalidParamException;
+use yii\base\InvalidArgumentException;
 use yii\helpers\VarDumper;
 
 /**
@@ -133,7 +133,7 @@ abstract class Manager extends Component implements ManagerInterface
     {
         $transaction = $this->findTransaction($transactionId);
         if (empty($transaction)) {
-            throw new InvalidParamException("Unable to find transaction '{$transactionId}'");
+            throw new InvalidArgumentException("Unable to find transaction '{$transactionId}'");
         }
 
         $amount = $transaction[$this->amountAttribute];
@@ -160,7 +160,7 @@ abstract class Manager extends Component implements ManagerInterface
                 if ($this->autoCreateAccount) {
                     $accountId = $this->createAccount($idOrFilter);
                 } else {
-                    throw new InvalidParamException('Unable to find account matching filter: ' . VarDumper::export($idOrFilter));
+                    throw new InvalidArgumentException('Unable to find account matching filter: ' . VarDumper::export($idOrFilter));
                 }
             }
         } else {
