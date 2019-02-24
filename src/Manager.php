@@ -68,7 +68,14 @@ abstract class Manager extends Component implements ManagerInterface
      * If not set PHP `time()` function will be used.
      */
     public $dateAttributeValue;
-
+    /**
+     * @var string name of account type column.
+     */
+    public $accountTypeAttribute = 'type';
+    /**
+     * @var string name of default account type value.
+     */
+    public $defaultTypeValue = 'purchase';
 
     /**
      * {@inheritdoc}
@@ -164,9 +171,13 @@ abstract class Manager extends Component implements ManagerInterface
                 }
             }
         } else {
-            $accountId = $idOrFilter;
+            $checkedAccountId = $this->findAccountId($idOrFilter);
+            if(is_null($checkedAccountId)) {
+                $accountId = $this->createAccount([$this->accountLinkAttribute => $idOrFilter, $this->accountTypeAttribute => $this->defaultTypeValue]);
+            } else {
+                $accountId = $checkedAccountId;
+            }
         }
-
         return $accountId;
     }
 
