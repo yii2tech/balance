@@ -1,5 +1,5 @@
 {
-    "name": "yii2tech/balance",
+    "name": "redflasher/balance",
     "description": "Provides support for Balance accounting system based on debit and credit principle",
     "keywords": ["yii2", "balance", "accounting", "bookkeeping", "debit", "credit"],
     "type": "yii2-extension",
@@ -8,12 +8,16 @@
         "issues": "https://github.com/yii2tech/balance/issues",
         "forum": "http://www.yiiframework.com/forum/",
         "wiki": "https://github.com/yii2tech/balance/wiki",
-        "source": "https://github.com/yii2tech/balance"
+        "source": "https://github.com/redflasher/balance"
     },
     "authors": [
         {
             "name": "Paul Klimov",
             "email": "klimov.paul@gmail.com"
+        },
+        {
+            "name": "Alexey Burlakov",
+            "email": "redflasher@yandex.ru"
         }
     ],
     "require": {
@@ -21,8 +25,8 @@
     },
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
+            "type": "git",
+            "url": "https://github.com/redflasher/balance.git"
         }
     ],
     "autoload": {
