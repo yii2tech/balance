@@ -53,7 +53,7 @@ balance accounts: 'virtual-money', 'payment-gateway' and 'purchases'. When user 
 should remove money from 'payment-gateway' and add them to 'virtual-money'. When user purchases an item, our system should
 remove money from 'virtual-money' and add them to 'purchases'.
 The trick is: if you sum current amount over all user related accounts ('payment-gateway' + 'virtual-money' + 'purchases'),
-it will always be equal to zero. Such check allows you to verify is something went wrong any time.
+it will always be equal to zero. Such check allows you to verify if something went wrong any time.
 
 This extension introduces term 'balance manager' as a Yii application component, which should handle all balance transactions.
 Several implementations of such component are provided:
